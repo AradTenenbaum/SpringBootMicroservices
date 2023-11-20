@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     @Value("${inventory.service.url}")
     private String InventoryServiceUrl;
@@ -41,7 +41,7 @@ public class OrderService {
                 .collect(Collectors.toList());
         order.setOrderLineItemsList(orderLineItemList);
 
-        List<ProductInStockResponse> result = webClient.post()
+        List<ProductInStockResponse> result = webClientBuilder.build().post()
                 .uri(InventoryServiceUrl + "/api/inventory")
                 .bodyValue(orderLineItemList
                         .stream()
